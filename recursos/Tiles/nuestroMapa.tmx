@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" orientation="orthogonal" renderorder="right-down" width="20" height="10" tilewidth="512" tileheight="512" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="Mossy - TileSet.tsx"/>
+ <tileset firstgid="50" source="Mossy - FloatingPlatforms.tsx"/>
+ <tileset firstgid="66" source="Mossy - BackgroundDecoration.tsx"/>
+ <tileset firstgid="130" source="Mossy - MossyHills.tsx"/>
+ <tileset firstgid="146" source="Mossy - Decorations&amp;Hazards.tsx"/>
+ <tileset firstgid="210" source="Mossy - Hanging Plants.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="20" height="10">
+  <data encoding="base64" compression="zlib">
+   eJytzjsOQUEUxvG5boOKrSg9KhuwBHahpvB+JQiJZ8MeJDoqnbfG2z78bzKSMa5E4p7kV5wzc76ZoxDihDMu4r1SmGqsyit3llhhjQ2uNnkZZJFDAUWpJD5rix32OMjZDXc8ZP/K0PfLqKCKmk22kzXCGHWHcztf5kGEEJYiX+4ZMJU+8Od/3PAqvUth2m78lreQvUdhzRtoyrMW2tq+of3B2osjigl8Cj+66KGPAYaYY4Y0Ysr7SYU1T+AJjWYsqQ==
+  </data>
+ </layer>
+</map>

@@ -1,43 +1,49 @@
 package io.github.gameRunner;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class SlimeEnemy {
     private float x, y;
-    private Texture enemyTexture;
-    private float speed = 120;  // 🔹 Velocidad de movimiento del slime
+    private float speed = 120;
     private Rectangle enemyArea;
     private float scale = 0.25f;
+    private Animation<TextureRegion> slimeAnimation;
+    private float stateTime = 0;  // 🔹 Controla el tiempo de animación
 
     public SlimeEnemy(float startX, float startY, String slimeType) {
         this.x = startX;
         this.y = startY;
+        this.slimeAnimation = loadSlimeAnimation(slimeType);
 
-        // 🔹 Cargar la imagen correcta del slime según el tipo
-        String filePath = "enemies/" + slimeType + "/" + slimeType + "_00001.png";
-        enemyTexture = new Texture(Gdx.files.internal(filePath));
+        float scaledWidth = slimeAnimation.getKeyFrame(0).getRegionWidth() * scale;
+        float scaledHeight = slimeAnimation.getKeyFrame(0).getRegionHeight() * scale;
+        this.enemyArea = new Rectangle(x, y, scaledWidth, scaledHeight);
+    }
 
-        if (enemyTexture == null) {
-            System.out.println("⚠ ERROR: No se pudo cargar la textura del slime: " + filePath);
-        } else {
-            System.out.println("✅ Slime cargado correctamente desde: " + filePath);
+    private Animation<TextureRegion> loadSlimeAnimation(String slimeType) {
+        Array<TextureRegion> frames = new Array<>();
+        for (int i = 0; i <= 29; i++) {
+            String filePath = String.format("enemies/%s/%s_%05d.png", slimeType, slimeType, i);
+            frames.add(new TextureRegion(new Texture(Gdx.files.internal(filePath))));
         }
-
-        // 🔹 Definir la hitbox del enemigo
-        float scaledWidth = enemyTexture.getWidth() * scale;
-        float scaleHeight = enemyTexture.getHeight() * scale;
-        this.enemyArea = new Rectangle(x, y, scaledWidth, scaleHeight);
+        return new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
     }
 
     public void update(float delta) {
-        x -= speed * delta;  // 🔹 Mueve el slime de derecha a izquierda
+        x -= speed * delta;
         enemyArea.setPosition(x, y);
+        stateTime += delta;  // 🔹 Actualizar el tiempo de animación
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(enemyTexture, x, y, enemyTexture.getWidth() * scale, enemyTexture.getHeight() * scale);
+        TextureRegion currentFrame = slimeAnimation.getKeyFrame(stateTime, true);
+        batch.draw(currentFrame, x, y, currentFrame.getRegionWidth() * scale, currentFrame.getRegionHeight() * scale);
     }
 
     public boolean checkCollision(Rectangle player) {
@@ -46,11 +52,10 @@ public class SlimeEnemy {
 
     public float getX() { return x; }
     public float getY() { return y; }
-    public float getWidth() {
-        return enemyTexture.getWidth() * scale; // Devuelve el tamaño escalado
-    }
+    public float getWidth() { return enemyArea.getWidth(); }
+    public float getHeight() { return enemyArea.getHeight(); }
 
     public void resetPosition() {
-        this.x = Gdx.graphics.getWidth() + enemyTexture.getWidth() * scale;  // 🔹 Reiniciar en el extremo derecho de la pantalla
+        this.x = Gdx.graphics.getWidth();
     }
 }

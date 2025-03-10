@@ -3,7 +3,10 @@ package io.github.gameRunner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import java.time.Clock;
 
 public class HUD {
     private static int score;
@@ -22,6 +25,7 @@ public class HUD {
 
     public static void increaseScore(){
         score++;
+        System.out.println("Nuevo Score: " + score);
     }
 
     public static void increaseCollisions(){
@@ -53,14 +57,13 @@ public class HUD {
     }
 
     public void render(SpriteBatch batch){
-        batch.begin();
-        font.draw(batch, "Score: " + score, 20, Gdx.graphics.getHeight() - 40);
-        font.draw(batch, "Collisions: " + collisionCount, 20, Gdx.graphics.getHeight() - 80);
-
+        //batch.begin();
+        font.draw(batch, "Score: " + getScore(), -60, Gdx.graphics.getHeight() - 440);
+        font.draw(batch, "Collisions: " + collisionCount, -60, Gdx.graphics.getHeight() - 480);
         if(gameOver){
-            font.draw(batch, "GAME OVER", Gdx.graphics.getWidth() / 2f - 50, Gdx.graphics.getHeight() / 2f);
+            font.draw(batch, "GAME OVER", Gdx.graphics.getWidth() / 2f - 700, Gdx.graphics.getHeight() / 6f);
         }
 
-        batch.end();
+        //batch.end();
     }
 }

@@ -1,30 +1,30 @@
 package io.github.gameRunner;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MenuScreen implements Screen {
     private MainGame game;
     private Stage stage;
-    private Skin skin;
-    private TextButton startButton, exitButton;
     private Texture background;
-
     private OrthographicCamera camera;
     private Viewport viewport;
+
+    // Botones con imágenes
+    private ImageButton playButton;
+    private ImageButton exitButton;
 
     public MenuScreen(MainGame game) {
         this.game = game;
@@ -40,12 +40,36 @@ public class MenuScreen implements Screen {
         // Cargar imagen de fondo
         background = new Texture("environment/inicio.png");
 
-        // Crear skin y botones
-        skin = new Skin();
-        createButtons(skin); // 🔹 Llamamos a la nueva función para crear los botones con el estilo personalizado
+        // Crear los botones con imágenes
+        createButtons();
 
-        // Agregar eventos a los botones
-        startButton.addListener(new ClickListener() {
+        // Organizar los botones en una tabla
+        Table table = new Table();
+        table.setFillParent(true);
+        table.center();
+        table.add(playButton).padBottom(20).row();
+        table.add(exitButton).padBottom(20).row();
+
+        stage.addActor(table);
+    }
+
+    /**
+     * Método para crear botones con imágenes
+     */
+    private void createButtons() {
+        Texture playTexture = new Texture("buttons/play.png");
+        Texture exitTexture = new Texture("buttons/exit.png");
+
+        // Usamos TextureRegionDrawable para los botones
+        playButton = new ImageButton(new TextureRegionDrawable(playTexture));
+        exitButton = new ImageButton(new TextureRegionDrawable(exitTexture));
+
+        // Definir tamaño de los botones
+        playButton.setSize(200, 80);
+        exitButton.setSize(200, 80);
+
+        // **Agregar eventos a los botones**
+        playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(game));
@@ -58,40 +82,6 @@ public class MenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
-        // Organizar los botones en una tabla
-        Table table = new Table();
-        table.setFillParent(true);
-        table.center();
-        table.add(startButton).padBottom(20).row();
-        table.add(exitButton).padBottom(20).row();
-
-        stage.addActor(table);
-    }
-
-    /**
-     * Función para crear los botones con fuente más grande, color negro y negrita
-     */
-    private void createButtons(Skin skin) {
-        // **Crear una nueva fuente más grande y en negrita**
-        BitmapFont font = new BitmapFont();
-        font.getData().setScale(2.0f); // 🔹 Aumentar el tamaño de la fuente
-
-        // **Definir el estilo del botón**
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = font;
-        buttonStyle.fontColor = Color.BLACK; // 🔹 Color negro
-
-        // **Agregar la fuente al skin**
-        skin.add("default-font", font);
-
-        // **Crear los botones con el estilo actualizado**
-        startButton = new TextButton("START", buttonStyle);
-        exitButton = new TextButton("EXIT", buttonStyle);
-
-        // **Definir tamaño de los botones**
-        startButton.setSize(200, 80);
-        exitButton.setSize(200, 80);
     }
 
     @Override
@@ -122,7 +112,6 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
         background.dispose();
     }
 
